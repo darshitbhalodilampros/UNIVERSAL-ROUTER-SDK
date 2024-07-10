@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, Ether } from 'sdkcore18'
+import { Currency, CurrencyAmount, Ether } from 'lampros-core'
 
 export function getNativeCurrencyValue(currencyValues: CurrencyAmount<Currency>[]): CurrencyAmount<Currency> {
   for (const value of currencyValues) {

@@ -1,5 +1,5 @@
 {
-  "name": "universalroutersdk18",
+  "name": "lampros-universal",
   "version": "0.0.1",
   "description": "sdk for integrating with the Universal Router contracts",
   "main": "dist/index.js",
@@ -51,9 +51,9 @@
   "dependencies": {
     "@uniswap/universal-router": "^1.6.0",
     "@uniswap/permit2-sdk": "^1.2.0",
-    "routersdk18": "0.0.1",
-    "sdkcore18": "0.0.1",
-    "v3sdk18": "0.0.1",
+    "lampros-router": "0.0.1",
+    "lampros-core": "0.0.1",
+    "lampros-v3": "0.0.1",
     "bignumber.js": "^9.0.2",
     "ethers": "^5.3.1"
   },

@@ -5824,6 +5824,42 @@ kleur@^3.0.3:
   resolved "https://registry.npmjs.org/kleur/-/kleur-3.0.3.tgz"
   integrity sha512-eTIzlVOSUR+JxdDFepEYcBMtZ9Qqdef+rnzWdRZuMbOywu5tO2w2N7rqjoANZ5k9vywhL6Br1VRjUIgTQx4E8w==
 
+lampros-core@0.0.1, lampros-core@^0.0.1:
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/lampros-core/-/lampros-core-0.0.1.tgz#89d39f33ca29ea961f5c165025214fdb0202da73"
+  integrity sha512-CTS1V+oW6c8Qpm8nKA387DToDbuojaseu/Z2yfDVZTVReHS86mc7oBv0jdmVuz+g8SVKFeTvDlSDSxBCEp4R5Q==
+  dependencies:
+    "@ethersproject/address" "^5.0.2"
+    big.js "^5.2.2"
+    decimal.js-light "^2.5.0"
+    jsbi "^3.1.4"
+    tiny-invariant "^1.1.0"
+    toformat "^2.0.0"
+
+lampros-router@0.0.1:
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/lampros-router/-/lampros-router-0.0.1.tgz#40e1f47a212c39a8f17e1d08de313ac78569f125"
+  integrity sha512-VU5TbjNw/rIgWMQlFBMHTIaMqSz/MEtmMe98Gzawf9USY1ov6dgXTcEt40OZIq4wFp31ar48xnQ1NLFXnhbimg==
+  dependencies:
+    "@ethersproject/abi" "^5.5.0"
+    "@uniswap/swap-router-contracts" "^1.1.0"
+    lampros-core "^0.0.1"
+    lampros-v3 "^0.0.1"
+
+lampros-v3@0.0.1, lampros-v3@^0.0.1:
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/lampros-v3/-/lampros-v3-0.0.1.tgz#bf64c1692acde0c15e0baeef1db2b2104df688a9"
+  integrity sha512-CKFCVLHrZmc93/jHwroLhDGDZ7SQylHnLxJqlmNXQLhaS/3tw3ZuZ/66TClEGKmxPC0yZ6p7WzEy8n4ThaZuIQ==
+  dependencies:
+    "@ethersproject/abi" "^5.0.12"
+    "@ethersproject/solidity" "^5.0.9"
+    "@uniswap/swap-router-contracts" "^1.2.1"
+    "@uniswap/v3-periphery" "^1.1.1"
+    "@uniswap/v3-staker" "1.0.0"
+    lampros-core "^0.0.1"
+    tiny-invariant "^1.1.0"
+    tiny-warning "^1.0.3"
+
 language-subtag-registry@~0.3.2:
   version "0.3.22"
   resolved "https://registry.npmjs.org/language-subtag-registry/-/language-subtag-registry-0.3.22.tgz"
@@ -7165,16 +7201,6 @@ rollup@^1.32.1:
     "@types/node" "*"
     acorn "^7.1.0"
 
-routersdk18@0.0.1:
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/routersdk18/-/routersdk18-0.0.1.tgz#7254e94b58ca4cfa166b4d02430eb2fe13816e7f"
-  integrity sha512-BXnFMPN5N/z6vEH7aftbDLhjJUrPx7YrKdy/ToDXuoXfMDMoIQUiWd85gEOv8v8y/L+ndQZ1NX2suPmgmQI35A==
-  dependencies:
-    "@ethersproject/abi" "^5.5.0"
-    "@uniswap/swap-router-contracts" "^1.1.0"
-    sdkcore18 "0.0.1"
-    v3sdk18 "0.0.1"
-
 rsvp@^4.8.4:
   version "4.8.5"
   resolved "https://registry.npmjs.org/rsvp/-/rsvp-4.8.5.tgz"
@@ -7263,18 +7289,6 @@ scrypt-js@3.0.1, scrypt-js@^3.0.0:
   version "3.0.1"
   resolved "https://registry.npmjs.org/scrypt-js/-/scrypt-js-3.0.1.tgz"
   integrity sha512-cdwTTnqPu0Hyvf5in5asVdZocVDTNRmR7XEcJuIzMjJeSHybHl7vpB66AzwTaIg6CLSbtjcxc8fqcySfnTkccA==
-
-sdkcore18@0.0.1:
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/sdkcore18/-/sdkcore18-0.0.1.tgz#eac46f92a61c0b81ee5d47f7d77ae83cf74c346d"
-  integrity sha512-DTCGkRC4THAOvI1LH2Ji9PAy2jfRnvswaLmjAdF4X1d3sDdZdlH3zH5gE/NnGar6HYoZVOTSV3VlOif69RIv1g==
-  dependencies:
-    "@ethersproject/address" "^5.0.2"
-    big.js "^5.2.2"
-    decimal.js-light "^2.5.0"
-    jsbi "^3.1.4"
-    tiny-invariant "^1.1.0"
-    toformat "^2.0.0"
 
 secp256k1@^4.0.1:
   version "4.0.3"
@@ -8281,20 +8295,6 @@ uuid@^8.3.2:
   version "8.3.2"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-8.3.2.tgz#80d5b5ced271bb9af6c445f21a1a04c606cefbe2"
   integrity sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==
-
-v3sdk18@0.0.1:
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/v3sdk18/-/v3sdk18-0.0.1.tgz#0893d8f7eb9c5aa239c9b95b6a1a76dff083ceb7"
-  integrity sha512-6dammMBpokpUFCDmPeM1Q5zUJG6wYTRJ/dn/3forl5FIVmKgWTjHESVFnDCl01QopbNhLIHpw5aVgesCIwCBjw==
-  dependencies:
-    "@ethersproject/abi" "^5.0.12"
-    "@ethersproject/solidity" "^5.0.9"
-    "@uniswap/swap-router-contracts" "^1.2.1"
-    "@uniswap/v3-periphery" "^1.1.1"
-    "@uniswap/v3-staker" "1.0.0"
-    sdkcore18 "0.0.1"
-    tiny-invariant "^1.1.0"
-    tiny-warning "^1.0.3"
 
 v8-compile-cache-lib@^3.0.1:
   version "3.0.1"

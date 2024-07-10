@@ -1,7 +1,7 @@
 import JSBI from 'jsbi'
 import { RoutePlanner, CommandType } from '../../utils/routerCommands'
 // import { Trade as V1Trade, Pair } from '@pollum-io/v1-sdk'
-import { Trade as V2Trade, Pool, encodeRouteToPath } from 'v3sdk18'
+import { Trade as V2Trade, Pool, encodeRouteToPath } from 'lampros-v3'
 import {
   Trade as RouterTrade,
   // MixedRouteTrade,
@@ -13,9 +13,9 @@ import {
   // getOutputOfPools,
   // encodeMixedRouteToPath,
   // partitionMixedRouteByProtocol,
-} from 'routersdk18'
+} from 'lampros-router'
 import { Permit2Permit } from '../../utils/inputTokens'
-import { Currency, TradeType, CurrencyAmount, Percent } from 'sdkcore18'
+import { Currency, TradeType, CurrencyAmount, Percent } from 'lampros-core'
 import { Command, RouterTradeType, TradeConfig } from '../Command'
 import { SENDER_AS_RECIPIENT, ROUTER_AS_RECIPIENT } from '../../utils/constants'
 
