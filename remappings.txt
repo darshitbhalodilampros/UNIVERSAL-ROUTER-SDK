@@ -1,0 +1,13 @@
+@ensdomains/=node_modules/@pollum-io/universal-router/node_modules/@ensdomains/
+@openzeppelin/=lib/openzeppelin-contracts/
+@pollum-io/=node_modules/@pollum-io/
+base64-sol/=node_modules/base64-sol/
+ds-test/=lib/forge-std/lib/ds-test/src/
+forge-std/=lib/forge-std/src/
+hardhat/=node_modules/@pollum-io/universal-router/node_modules/hardhat/
+openzeppelin-contracts=lib/openzeppelin-contracts/
+permit2/=lib/permit2/
+universal-router/=node_modules/@pollum-io/universal-router/contracts
+solmate/=lib/solmate/
+v1-core/=node_modules/@pollum-io/universal-router/lib/v1-core/
+v2-core/=node_modules/@pollum-io/universal-router/lib/v2-core/
