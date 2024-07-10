@@ -18,11 +18,18 @@ import { Permit2Permit } from '../../utils/inputTokens'
 import { Currency, TradeType, CurrencyAmount, Percent } from 'lampros-core'
 import { Command, RouterTradeType, TradeConfig } from '../Command'
 import { SENDER_AS_RECIPIENT, ROUTER_AS_RECIPIENT } from '../../utils/constants'
+import { encodeFeeBips } from '../../utils/expandTo18Decimals'
+import { BigNumber, BigNumberish } from 'ethers'
 
+export type FlatFeeOptions = {
+  amount: BigNumberish
+  recipient: string
+}
 // the existing router permit object doesn't include enough data for permit2
 // so we extend swap options with the permit2 permit
 export type SwapOptions = Omit<RouterSwapOptions, 'inputTokenPermit'> & {
-  inputTokenPermit?: Permit2Permit
+  inputTokenPermit?: Permit2Permit,
+  flatFee?: FlatFeeOptions
 }
 
 const REFUND_ETH_PRICE_IMPACT_THRESHOLD = new Percent(JSBI.BigInt(50), JSBI.BigInt(100))
@@ -37,7 +44,9 @@ interface Swap<TInput extends Currency, TOutput extends Currency> {
 // also translates trade objects from previous (v2, v3) SDKs
 export class PegasysTrade implements Command {
   readonly tradeType: RouterTradeType = RouterTradeType.PegasysTrade
-  constructor(public trade: RouterTrade<Currency, Currency, TradeType>, public options: SwapOptions) { }
+  constructor(public trade: RouterTrade<Currency, Currency, TradeType>, public options: SwapOptions) {
+    if (!!options.fee && !!options.flatFee) throw new Error('Only one fee option permitted')
+   }
 
   encode(planner: RoutePlanner, _config: TradeConfig): void {
     let payerIsUser = true
@@ -60,7 +69,7 @@ export class PegasysTrade implements Command {
       this.trade.tradeType === TradeType.EXACT_INPUT && this.trade.routes.length > 2
     const outputIsNative = this.trade.outputAmount.currency.isNative
     const inputIsNative = this.trade.inputAmount.currency.isNative
-    const routerMustCustody = performAggregatedSlippageCheck || outputIsNative
+    const routerMustCustody = performAggregatedSlippageCheck || outputIsNative || hasFeeOption(this.options)
 
     for (const swap of this.trade.swaps) {
       switch (swap.route.protocol) {
@@ -77,18 +86,51 @@ export class PegasysTrade implements Command {
           throw new Error('UNSUPPORTED_TRADE_PROTOCOL')
       }
     }
+    
+    let minimumAmountOut: BigNumber = BigNumber.from(
+      this.trade.minimumAmountOut(this.options.slippageTolerance).quotient.toString()
+    )
 
     if (routerMustCustody) {
-      if (outputIsNative) {
-        planner.addCommand(CommandType.UNWRAP_WETH, [
-          this.options.recipient,
-          this.trade.minimumAmountOut(this.options.slippageTolerance).quotient.toString(),
+      if (!!this.options.fee) {
+        const feeBips = encodeFeeBips(this.options.fee.fee)
+        planner.addCommand(CommandType.PAY_PORTION, [
+          this.trade.outputAmount.currency.wrapped.address,
+          this.options.fee.recipient,
+          feeBips,
         ])
+
+        // If the trade is exact output, and a fee was taken, we must adjust the amount out to be the amount after the fee
+        // Otherwise we continue as expected with the trade's normal expected output
+        if (this.trade.tradeType === TradeType.EXACT_OUTPUT) {
+          minimumAmountOut = minimumAmountOut.sub(minimumAmountOut.mul(feeBips).div(10000))
+        }
+      }
+
+      if (!!this.options.flatFee) {
+        const feeAmount = this.options.flatFee.amount
+        if (minimumAmountOut.lt(feeAmount)) throw new Error('Flat fee amount greater than minimumAmountOut')
+
+        planner.addCommand(CommandType.TRANSFER, [
+          this.trade.outputAmount.currency.wrapped.address,
+          this.options.flatFee.recipient,
+          feeAmount,
+        ])
+
+        // If the trade is exact output, and a fee was taken, we must adjust the amount out to be the amount after the fee
+        // Otherwise we continue as expected with the trade's normal expected output
+        if (this.trade.tradeType === TradeType.EXACT_OUTPUT) {
+          minimumAmountOut = minimumAmountOut.sub(feeAmount)
+        }
+      }
+
+      if (outputIsNative) {
+        planner.addCommand(CommandType.UNWRAP_WETH, [this.options.recipient, minimumAmountOut])
       } else {
         planner.addCommand(CommandType.SWEEP, [
           this.trade.outputAmount.currency.wrapped.address,
           this.options.recipient,
-          this.trade.minimumAmountOut(this.options.slippageTolerance).quotient.toString(),
+          minimumAmountOut,
         ])
       }
     }
@@ -261,4 +303,8 @@ function addV3Swap<TInput extends Currency, TOutput extends Currency>(
 // if price impact is very high, there's a chance of hitting max/min prices resulting in a partial fill of the swap
 function riskOfPartialFill(trade: RouterTrade<Currency, Currency, TradeType>): boolean {
   return trade.priceImpact.greaterThan(REFUND_ETH_PRICE_IMPACT_THRESHOLD)
+}
+
+function hasFeeOption(swapOptions: SwapOptions): boolean {
+  return !!swapOptions.fee || !!swapOptions.flatFee
 }
